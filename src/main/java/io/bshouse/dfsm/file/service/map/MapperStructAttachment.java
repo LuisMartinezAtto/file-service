@@ -1,6 +1,7 @@
 package io.bshouse.dfsm.file.service.map;
 
 import io.bshouse.dfsm.file.service.dto.AttachmentResponseDTO;
+import io.bshouse.dfsm.file.service.dto.CreateAttachmentRequestDTO;
 import io.bshouse.dfsm.file.service.model.Attachment;
 import org.dozer.DozerBeanMapper;
 import org.springframework.stereotype.Component;
@@ -14,7 +15,9 @@ public class MapperStructAttachment {
     }
 
     public AttachmentResponseDTO attachmentToAttachmentResponseDTO(Attachment attachment) {
-        AttachmentResponseDTO announcementResponseDTO = dozerBeanMapper.map(attachment, AttachmentResponseDTO.class);
-        return announcementResponseDTO;
+        return dozerBeanMapper.map(attachment, AttachmentResponseDTO.class);
+    }
+    public Attachment createAttachmentRequestDTOToAttachment(CreateAttachmentRequestDTO createAttachmentRequestDTO) {
+       return dozerBeanMapper.map(createAttachmentRequestDTO, Attachment.class);
     }
 }

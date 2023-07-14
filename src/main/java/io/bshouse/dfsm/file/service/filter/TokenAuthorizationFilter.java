@@ -54,7 +54,7 @@ public class TokenAuthorizationFilter extends OncePerRequestFilter {
                 ////add email/userId to request the body of the next controller if needed
                 request.setAttribute("email", responseDTO.getDataList().get("email"));
                 request.setAttribute("userId", responseDTO.getDataList().get("userId"));
-                logger.info(String.format("End Verify token response with body: ", jwtToken, new ObjectMapper().writeValueAsString(responseDTO.isStatus())));
+                logger.info(String.format("End Verify token response with body: %s", new ObjectMapper().writeValueAsString(responseDTO.isStatus())));
                 Authentication authentication = new UsernamePasswordAuthenticationToken(isNull(responseDTO.getDataList().get("userId"))? "0" : responseDTO.getDataList().get("userId").toString(), null, getSimpleGrantedAuthorityList(responseDTO.getDataList()));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } catch (Exception e) {

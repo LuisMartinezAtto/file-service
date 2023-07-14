@@ -1,14 +1,14 @@
 package io.bshouse.dfsm.file.service.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Setter
 @Getter
+@AllArgsConstructor
+@Builder
 @NoArgsConstructor
 @Entity
 @Table(name = "attachments")

@@ -27,7 +27,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     @ExceptionHandler(AttachmentNotFoundException.class)
     @ResponseBody
-    protected ResponseEntity<Object> AnnouncementNotFoundException(AttachmentNotFoundException e) {
+    protected ResponseEntity<Object> AttachmentNotFoundException(AttachmentNotFoundException e) {
         this.logger.error("error ", e);
         return new ResponseEntity<>(ResponseDTO.builder().errors(List.of(INTERNAL_SERVER_ERROR)).status(false).build(),
                 HttpStatus.NOT_FOUND);
