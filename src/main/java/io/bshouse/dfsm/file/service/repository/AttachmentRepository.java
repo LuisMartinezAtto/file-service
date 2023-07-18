@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public interface AttachmentRepository extends JpaRepository<Attachment, Long> {
 
-    List<Attachment> findByElementId(Long elementId);
+    Optional<Attachment> findByElementId(Long elementId);
     @Query("select a from Attachment a")
     Page<Attachment> findAllAttachments(Pageable pageable);
     Optional<Attachment> findByOriginalName(String originalName);

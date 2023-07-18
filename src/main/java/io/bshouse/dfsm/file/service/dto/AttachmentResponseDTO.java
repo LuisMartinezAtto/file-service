@@ -17,7 +17,7 @@ public class AttachmentResponseDTO {
     private String originalName;
     private String mimeType;
     private String elementId;
-    private Long externalFileId;
+    private String urlSource;
     @Enumerated(EnumType.STRING)
     private TypeFile typeFile;
 }

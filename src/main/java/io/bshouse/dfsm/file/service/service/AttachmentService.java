@@ -3,18 +3,24 @@ package io.bshouse.dfsm.file.service.service;
 import io.bshouse.dfsm.file.service.dto.AttachmentResponseDTO;
 import io.bshouse.dfsm.file.service.dto.CreateAttachmentRequestDTO;
 import io.bshouse.dfsm.file.service.dto.ResponseDTO;
+import io.bshouse.dfsm.file.service.exception.AttachmentNotFoundException;
 import io.bshouse.dfsm.file.service.map.MapperStructAttachment;
 import io.bshouse.dfsm.file.service.model.Attachment;
 import io.bshouse.dfsm.file.service.repository.AttachmentRepository;
+import io.bshouse.dfsm.file.service.service.external.FileService;
+import io.bshouse.dfsm.file.service.service.external.file.dto.FileResponseDTO;
+import io.bshouse.dfsm.file.service.util.CustomMultipartFile;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.util.Date;
@@ -26,17 +32,24 @@ import java.util.stream.Collectors;
 @Transactional
 public class AttachmentService {
     private final MapperStructAttachment mapperStructAnnouncement;
+    private final Logger logger = LoggerFactory.getLogger(AttachmentService.class);
     private final AttachmentRepository attachmentRepository;
+    private final FileService fileService;
 
 
-    public AttachmentService(MapperStructAttachment mapperStructAnnouncement, AttachmentRepository attachmentRepository) {
+    public AttachmentService(MapperStructAttachment mapperStructAnnouncement, AttachmentRepository attachmentRepository, FileService fileService) {
         this.mapperStructAnnouncement = mapperStructAnnouncement;
         this.attachmentRepository = attachmentRepository;
+        this.fileService = fileService;
     }
 
-    public List<AttachmentResponseDTO> getByElementId(Long elementId) {
-        return this.attachmentRepository.findByElementId(elementId).stream()
-                .map(mapperStructAnnouncement::attachmentToAttachmentResponseDTO).collect(Collectors.toList());
+    public AttachmentResponseDTO getByElementId(Long elementId) throws AttachmentNotFoundException {
+        return this.attachmentRepository.findByElementId(elementId).map(mapperStructAnnouncement::attachmentToAttachmentResponseDTO).orElseThrow(AttachmentNotFoundException::new);
+
+    }
+    public AttachmentResponseDTO getByAttachmentId(Long attachmentId) throws AttachmentNotFoundException {
+        return this.attachmentRepository.findById(attachmentId)
+                .map(mapperStructAnnouncement::attachmentToAttachmentResponseDTO).orElseThrow(AttachmentNotFoundException::new);
 
     }
 
@@ -61,8 +74,8 @@ public class AttachmentService {
         Attachment attachment = this.mapperStructAnnouncement.createAttachmentRequestDTOToAttachment(createAttachmentRequestDTO);
         attachment.setCreationDate(new Date());
         attachment.setCreatedByUserId(Long.valueOf(securityContext.getAuthentication().getName()));
-        //call external service TODO
-        attachment.setExternalFileId(1L);
+        FileResponseDTO fileResponseDTO = this.fileService.createFile(createAttachmentRequestDTO.getFile());
+        attachment.setUrlSource(fileResponseDTO.getUrl());
         this.attachmentRepository.save(attachment);
     }
 

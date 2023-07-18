@@ -29,6 +29,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterAfter(this.jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+               // .antMatchers(AttachmentController.BASE_URL,AttachmentController.BASE_URL + AttachmentController.ENDPOINT_GET_BY_ELEMENT_ID).permitAll()
                 .anyRequest().authenticated()
                 .and().exceptionHandling().authenticationEntryPoint(this.jwtAuthenticationEntryPoint);
     }

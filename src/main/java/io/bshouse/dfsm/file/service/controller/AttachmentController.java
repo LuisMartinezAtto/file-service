@@ -2,6 +2,7 @@ package io.bshouse.dfsm.file.service.controller;
 
 import io.bshouse.dfsm.file.service.dto.CreateAttachmentRequestDTO;
 import io.bshouse.dfsm.file.service.dto.ResponseDTO;
+import io.bshouse.dfsm.file.service.exception.AttachmentNotFoundException;
 import io.bshouse.dfsm.file.service.service.AttachmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,8 @@ public class AttachmentController {
     public static final String ENDPOINT_GET_ALL = "";
     public static final String ENDPOINT_CREATE_ATTACHMENT = "";
     public static final String ENDPOINT_DELETE_ATTACHMENT = "/{attachmentId}";
-    public static final String ENDPOINT_GET_BY_ID = "/{elementId}";
+    public static final String ENDPOINT_GET_BY_ELEMENT_ID = "/elements/{elementId}";
+    public static final String ENDPOINT_GET_BY_ATTACHMENT_ID = "/{attachmentId}";
     private final AttachmentService attachmentService;
 
     @Autowired
@@ -28,11 +30,19 @@ public class AttachmentController {
         this.attachmentService = attachmentService;
     }
 
-    @GetMapping(ENDPOINT_GET_BY_ID)
-    public ResponseEntity<ResponseDTO> getAttachmentById(@PathVariable("elementId") Long elementId) {
+    @GetMapping(ENDPOINT_GET_BY_ELEMENT_ID)
+    public ResponseEntity<ResponseDTO> getAttachmentById(@PathVariable("elementId") Long elementId) throws AttachmentNotFoundException {
         return new ResponseEntity<>(
                 ResponseDTO.builder()
                         .data(this.attachmentService.getByElementId(elementId))
+                        .status(true).build(),
+                HttpStatus.OK);
+    }
+    @GetMapping(ENDPOINT_GET_BY_ATTACHMENT_ID)
+    public ResponseEntity<ResponseDTO> getAttachmentByAttachmentId(@PathVariable("attachmentId") Long attachmentId) throws AttachmentNotFoundException {
+        return new ResponseEntity<>(
+                ResponseDTO.builder()
+                        .data(this.attachmentService.getByAttachmentId(attachmentId))
                         .status(true).build(),
                 HttpStatus.OK);
     }
@@ -47,7 +57,7 @@ public class AttachmentController {
     }
 
     @PostMapping(ENDPOINT_CREATE_ATTACHMENT)
-    public ResponseEntity<ResponseDTO> createAttachment(@Valid @RequestBody CreateAttachmentRequestDTO createAttachmentRequestDTO) {
+    public ResponseEntity<ResponseDTO> createAttachment (@Valid @ModelAttribute CreateAttachmentRequestDTO createAttachmentRequestDTO) {
         this.attachmentService.createAttachment(createAttachmentRequestDTO);
         return new ResponseEntity<>(ResponseDTO.builder().status(true).build(), HttpStatus.OK);
     }

@@ -19,8 +19,8 @@ public class Attachment {
     private Long id;
     private String originalName;
     private String mimeType;
-    private String elementId;
-    private Long externalFileId;
+    private Long elementId;
+    private String urlSource;
     @Enumerated(EnumType.STRING)
     private TypeFile typeFile;
     private Long createdByUserId;
