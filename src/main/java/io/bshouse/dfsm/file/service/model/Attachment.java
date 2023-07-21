@@ -27,4 +27,5 @@ public class Attachment {
     private Long createdByUserId;
     private Date creationDate;
     private Date updateDate;
+    private Long fileSize;
 }

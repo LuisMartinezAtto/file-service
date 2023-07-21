@@ -20,4 +20,5 @@ public class AttachmentResponseDTO {
     private String urlSource;
     @Enumerated(EnumType.STRING)
     private TypeFile typeFile;
+    private Integer fileSize;
 }

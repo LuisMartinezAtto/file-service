@@ -7,9 +7,6 @@ import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
-
-/*@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)*/
 @Getter
 @Setter
 public class CreateAttachmentRequestDTO {
@@ -23,4 +20,7 @@ public class CreateAttachmentRequestDTO {
     private String typeFile;
     @NotNull(message = "file cannot be null")
     private MultipartFile file;
+    @NotNull(message = "fileSize cannot be null")
+    private Long fileSize;
+
 }
