@@ -66,6 +66,7 @@ class AttachmentControllerTest extends DfsmFileServiceApplicationTests {
         attachmentRepository.save(Attachment.builder()
                 .mimeType("application/rtf")
                 .creationDate(new Date())
+                .fileSize(19000L)
                 .createdByUserId(1L)
                 .originalName("file1")
                 .urlSource("http://local")
@@ -74,6 +75,7 @@ class AttachmentControllerTest extends DfsmFileServiceApplicationTests {
         attachmentRepository.save(Attachment.builder()
                 .mimeType("application/rtf")
                 .creationDate(new Date())
+                .fileSize(190001L)
                 .createdByUserId(2L)
                 .urlSource("http://local")
                 .originalName("file2")
@@ -98,6 +100,7 @@ class AttachmentControllerTest extends DfsmFileServiceApplicationTests {
                         .param("mimeType","application/pdf")
                         .param("elementId", String.valueOf(1))
                         .param("typeFile", "MAIL_SHOT")
+                        .param("fileSize", "12121212")
                 )
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
@@ -108,6 +111,7 @@ class AttachmentControllerTest extends DfsmFileServiceApplicationTests {
         assertEquals("application/pdf", attachment.getMimeType());
         assertEquals(TypeFile.MAIL_SHOT, attachment.getTypeFile());
         assertEquals(1L, attachment.getCreatedByUserId());
+        assertEquals(12121212, attachment.getFileSize());
     }
 
     @Test
@@ -156,6 +160,6 @@ class AttachmentControllerTest extends DfsmFileServiceApplicationTests {
         assertEquals("file1", attachmentResponseDTO.getOriginalName());
         assertEquals("http://local", attachmentResponseDTO.getUrlSource());
         assertEquals(TypeFile.MAIL_SHOT, attachmentResponseDTO.getTypeFile());
-
+        assertEquals(19000, attachmentResponseDTO.getFileSize());
     }
 }
