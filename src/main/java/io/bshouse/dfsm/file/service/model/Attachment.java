@@ -19,6 +19,7 @@ public class Attachment {
     private Long id;
     private String originalName;
     private String mimeType;
+    @Column(unique = true)
     private Long elementId;
     private String urlSource;
     @Enumerated(EnumType.STRING)
